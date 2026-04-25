@@ -1,0 +1,106 @@
+@import "tailwindcss";
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Noto+Sans+JP:wght@400;500;700;900&display=swap');
+
+:root {
+  --bg-primary: #050510;
+  --bg-card: #0d0d1a;
+  --bg-card-hover: #131325;
+  --accent-a: #7c3aed;
+  --accent-b: #db2777;
+  --accent-vs: #f59e0b;
+  --text-primary: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --glow-a: rgba(124, 58, 237, 0.4);
+  --glow-b: rgba(219, 39, 119, 0.4);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  height: 100%;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: 'Inter', 'Noto Sans JP', sans-serif;
+  overflow-x: hidden;
+}
+
+/* Animated gradient background */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: 
+    radial-gradient(ellipse at 20% 20%, rgba(124, 58, 237, 0.12) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 80%, rgba(219, 39, 119, 0.12) 0%, transparent 60%),
+    radial-gradient(ellipse at 50% 50%, rgba(245, 158, 11, 0.04) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+#root {
+  position: relative;
+  z-index: 1;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+::-webkit-scrollbar-thumb {
+  background: #2d2d4e;
+  border-radius: 3px;
+}
+
+/* Glass morphism card */
+.glass-card {
+  background: rgba(13, 13, 26, 0.8);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 20px;
+}
+
+/* Glow effects */
+.glow-a { box-shadow: 0 0 40px var(--glow-a); }
+.glow-b { box-shadow: 0 0 40px var(--glow-b); }
+
+/* Pulse animation for loading */
+@keyframes pulse-scale {
+  0%, 100% { transform: scale(1); opacity: 0.8; }
+  50% { transform: scale(1.08); opacity: 1; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+.shimmer {
+  background: linear-gradient(90deg, #1e1e3a 25%, #2d2d5e 50%, #1e1e3a 75%);
+  background-size: 200% auto;
+  animation: shimmer 1.5s linear infinite;
+}
+
+/* Card option styles */
+.option-card {
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.option-card:active {
+  transform: scale(0.97);
+}

@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: dilemma-api
+    runtime: node
+    rootDir: .
+    buildCommand: npm install
+    startCommand: node server/index.js
+    envVars:
+      - key: GEMINI_API_KEY
+        sync: false   # Renderのダッシュボードで手動設定します
+      - key: PORT
+        value: 10000
