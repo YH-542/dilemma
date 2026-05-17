@@ -23,29 +23,37 @@ const MODELS = ['gemini-2.5-flash', 'gemini-1.5-pro', 'gemini-1.5-flash'];
 // ============================================================
 
 const DILEMMA_PROMPT = (genre) => `
-あなたは「究極の2択」で場を盛り上げるプロです。
-「${genre}」のジャンルで、友達や合コンで出したら絶対盛り上がる究極の2択を1つ作ってください。
+# Role
+あなたは、人々の価値観や深層心理を浮き彫りにする「絶妙な2択（A or B）」を作成するスペシャリストです。
 
-【重要なスタイル指定】
-- 選択肢は超シンプルに！「愛 vs お金」「飲む / 飲まない」「男 / 女」のような短いフレーズ
-- 長い説明文や形容詞はNG。選択肢は最大15文字以内
-- Yes/No形式や二項対立がベスト
-- 日本のネット・飲み会文化で定番のノリ感
+# Task
+ユーザーから指定された「ジャンル」に基づき、回答者が本気で迷うレベルの2択問題を1つ作成してください。
 
-【良い例】
-- optionA: "愛"  optionB: "お金"
-- optionA: "飲む"  optionB: "飲まない"（不老不死の薬）
-- optionA: "男"  optionB: "女"（生まれ変わるなら）
-- optionA: "過去に戻る"  optionB: "未来に行く"
-- optionA: "有名人"  optionB: "一般人のまま"
+# Selection Criteria (重要)
+以下の3つの条件を必ず満たしてください：
+1. 【トレードオフの成立】: AとBのどちらかが圧倒的に優れている状態を避け、「メリットはあるが、同時にデメリットもある」という天秤が釣り合う状態にすること。
+2. 【リアルな葛藤】: 漫画のような非現実的な設定（魔法、数億円の報酬など）ではなく、日常生活や人生の選択において「実際にありそうな悩み」にフォーカスすること。
+3. 【共感と議論の余地】: どちらを選んでも「その人の性格や大切にしている価値観」が見えるような問いにすること。
 
-以下のJSON形式のみで返してください（コードブロックや前置き文は付けないこと）:
+# 出力のイメージ（恋愛ジャンルの例）
+- title: "連絡のテンポ"
+- theme: "現代の恋愛で最も意見が分かれるポイントです。"
+- optionA: "返信が爆速"
+- optionB: "返信が1日1回"
+- insight: "「安心感」を優先するか「自分のペース」を優先するか、その人の依存度と自立心が見えてくる。"
+
+# Response Format
+Webアプリで処理しやすいよう、以下のJSON形式のみを出力してください（Markdownのコードブロックや前置きは一切不要）：
 {
-  "optionA": "選択肢A（15文字以内）",
-  "optionB": "選択肢B（15文字以内）",
-  "tagline": "この問いのシチュエーション説明（30文字以内、例：不老不死の薬があったら？）",
-  "explanation": "それぞれを選ぶ人の気持ちや、選ぶのが難しい理由を会話調・カジュアルに100文字程度で"
+  "title": "【テーマ名】（例：連絡のテンポ）",
+  "theme": "この2択が意味するものの解説を1文で（例：現代の恋愛で最も意見が分かれるポイントです。）",
+  "optionA": "選択肢Aの短いラベル（最大20文字）",
+  "optionB": "選択肢Bの短いラベル（最大20文字）",
+  "insight": "この2択で何がわかるか？という解説を1文で（例：〜が見えてくる。）"
 }
+
+# Input
+Genre: ${genre}
 `.trim();
 
 const EXPLAIN_PROMPT = (genre, chosen, other) => `
@@ -117,10 +125,11 @@ app.post('/api/dilemma', async (req, res) => {
     const data = JSON.parse(cleaned);
 
     res.json({
+      title: data.title,
+      theme: data.theme,
       optionA: data.optionA,
       optionB: data.optionB,
-      tagline: data.tagline,
-      explanation: data.explanation,
+      insight: data.insight,
     });
   } catch (err) {
     console.error('Dilemma API error:', err?.status ?? '', err?.message ?? err);
